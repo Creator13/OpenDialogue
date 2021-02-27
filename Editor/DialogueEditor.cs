@@ -1,41 +1,22 @@
 using System.Linq;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Image = UnityEngine.UI.Image;
 
 namespace OpenDialogue.Editor
 {
-public class DialogueGraph : EditorWindow
+public class DialogueEditor : EditorWindow
 {
     private DialogueGraphView graphView;
-    private string filename = "New narrative";
 
-    // [MenuItem("Graph/Dialogue")]
-    // public static void OpenDialogueGraphWindow()
-    // {
-    //     var window = GetWindow<DialogueGraph>();
-    //     window.titleContent = new GUIContent("Dialogue Graph");
-    // }
+    public GUID SelectedGraphGuid { get; private set; }
 
-    [OnOpenAsset(1)]
-    public static bool OnOpenAsset(int instanceID, int line)
+    public void Init(GUID guid)
     {
-        if (EditorUtility.InstanceIDToObject(instanceID) is DialogueContainer)
-        {
-            var window = GetWindow<DialogueGraph>();
-            window.titleContent = new GUIContent("Dialogue Graph");
-            window.graphView.graphAssetInstanceID = instanceID;
-
-            window.RequestDataOperation(false);
-
-            return true;
-        }
-
-        return false;
+        SelectedGraphGuid = guid;
+        RequestDataOperation(false);
     }
 
     private void OnEnable()
@@ -44,6 +25,21 @@ public class DialogueGraph : EditorWindow
         GenerateToolbar();
         GenerateMinimap();
         GenerateBlackboard();
+    }
+
+    private void OnDisable()
+    {
+        rootVisualElement.Remove(graphView);
+    }
+
+    private void GenerateToolbar()
+    {
+        var toolbar = new Toolbar();
+
+        toolbar.Add(new ToolbarButton(() => RequestDataOperation(true)) {text = "Save"});
+        toolbar.Add(new Label($"{SelectedGraphGuid.ToString()}") {name = "currentInstanceId"});
+
+        rootVisualElement.Add(toolbar);
     }
 
     private void GenerateBlackboard()
@@ -84,43 +80,6 @@ public class DialogueGraph : EditorWindow
         graphView.Add(miniMap);
     }
 
-    private void OnDisable()
-    {
-        rootVisualElement.Remove(graphView);
-    }
-
-    private void GenerateToolbar()
-    {
-        var toolbar = new Toolbar();
-
-        toolbar.Add(new ToolbarButton(() => RequestDataOperation(true)) {text = "Save"});
-        toolbar.Add(new Label($"{graphView.graphAssetInstanceID}") {name = "currentInstanceId"});
-
-        rootVisualElement.Add(toolbar);
-    }
-
-    private void RequestDataOperation(bool save)
-    {
-        if (string.IsNullOrEmpty(filename))
-        {
-            EditorUtility.DisplayDialog("Invalid file name!", "Please enter a valid filename.", "Ok");
-            return;
-        }
-
-        var saveUtility = GraphSaveUtility.GetInstance(graphView);
-
-        if (save)
-        {
-            saveUtility.SaveGraph(graphView.graphAssetInstanceID);
-        }
-        else
-        {
-            saveUtility.LoadGraph(graphView.graphAssetInstanceID);
-            rootVisualElement.Q<Label>("currentInstanceId").text = $"{graphView.graphAssetInstanceID}";
-        }
-    }
-
-
     private void ConstructGraphView()
     {
         graphView = new DialogueGraphView(this)
@@ -130,6 +89,22 @@ public class DialogueGraph : EditorWindow
 
         graphView.StretchToParentSize();
         rootVisualElement.Add(graphView);
+    }
+
+    private void RequestDataOperation(bool save)
+    {
+        var saveUtility = GraphSaveUtility.GetInstance(graphView);
+
+        if (save)
+        {
+            saveUtility.SaveGraph(SelectedGraphGuid);
+        }
+        else
+        {
+            Debug.Log($"Loading {SelectedGraphGuid}");
+            rootVisualElement.Q<Label>("currentInstanceId").text = $"{SelectedGraphGuid.ToString()}";
+            saveUtility.LoadGraph(SelectedGraphGuid);
+        }
     }
 }
 }

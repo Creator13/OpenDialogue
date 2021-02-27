@@ -2,7 +2,6 @@
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,9 +23,9 @@ public class GraphSaveUtility
         };
     }
 
-    public void SaveGraph(int instanceID)
+    public void SaveGraph(GUID guid)
     {
-        var filename = AssetDatabase.GetAssetPath(instanceID);
+        var filename = AssetDatabase.GUIDToAssetPath(guid);
         var asset = AssetDatabase.LoadAssetAtPath<DialogueContainer>(filename);
         asset.Clear();
 
@@ -82,9 +81,9 @@ public class GraphSaveUtility
         return true;
     }
 
-    public void LoadGraph(int instanceID)
+    public void LoadGraph(GUID guid)
     {
-        var filename = AssetDatabase.GetAssetPath(instanceID);
+        var filename = AssetDatabase.GUIDToAssetPath(guid);
         Debug.Log(filename);
         LoadGraph(AssetDatabase.LoadAssetAtPath<DialogueContainer>(filename));
     }

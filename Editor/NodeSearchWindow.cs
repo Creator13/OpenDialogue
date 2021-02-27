@@ -36,13 +36,13 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider
         return tree;
     }
 
-    public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
+    public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
     {
         var worldMousePosition = window.rootVisualElement.ChangeCoordinatesTo(window.rootVisualElement.parent,
             context.screenMousePosition - window.position.position);
         var localMousePosition = graphView.contentViewContainer.WorldToLocal(worldMousePosition);
 
-        switch (SearchTreeEntry.userData)
+        switch (searchTreeEntry.userData)
         {
             case DialogueNode _:
                 graphView.CreateNode("Dialogue Node", localMousePosition);
