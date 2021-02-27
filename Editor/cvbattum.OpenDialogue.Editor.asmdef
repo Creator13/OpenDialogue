@@ -1,0 +1,16 @@
+{
+    "name": "cvbattum.OpenDialogue.Editor",
+    "rootNamespace": "OpenDialogue.Editor",
+    "references": [
+        "cvbattum.OpenDialogue.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

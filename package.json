@@ -1,0 +1,11 @@
+{
+  "name": "com.cvbattum.opendialogue",
+  "version": "0.1.0",
+  "displayName": "OpenDialogue",
+  "description": "OpenDialogue is a free graph-based dialogue system based on the GraphView API",
+  "unity": "2019.1",
+  "author": {
+    "name": "Casper van Battum"
+  },
+  "type": "tool"
+}
