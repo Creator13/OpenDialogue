@@ -1,11 +1,7 @@
 {
-  "name": "com.cvbattum.opendialogue",
+  "name": "com.github.cvbattum.opendialogue",
+  "description": "Dialogue node graph editor",
   "version": "0.1.0",
-  "displayName": "OpenDialogue",
-  "description": "OpenDialogue is a free graph-based dialogue system based on the GraphView API",
   "unity": "2019.1",
-  "author": {
-    "name": "Casper van Battum"
-  },
-  "type": "tool"
+  "displayName": "OpenDialogue"
 }
